@@ -1,15 +1,17 @@
 <?php
+require_once __DIR__ . '/../vendor/autoload.php'; // path disesuaikan
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 class Jwt_helper {
-    private static $key = 'kunci_rahasia_super_aman_12345'; // Ganti dengan kunci rahasia lo sendiri
-    private static $iss = 'http://localhost';
-    private static $aud = 'http://localhost';
+    private static $key = 'kunci_rahasia_super_aman_12345';
+    private static $iss = 'http://backendapliksikeuangan.test';
+    private static $aud = 'http://backendapliksikeuangan.test';
 
     public static function createToken($data) {
         $iat = time();
-        $exp = $iat + (60 * 60 * 24); // Expire dalam 24 jam
+        $exp = $iat + (60 * 60 * 24);
 
         $payload = [
             'iss' => self::$iss, 'aud' => self::$aud, 'iat' => $iat, 'exp' => $exp,

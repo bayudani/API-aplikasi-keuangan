@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/vendor/autoload.php';
 // Mengatur header default
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -13,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 // Memuat autoloader dari Composer
-require_once __DIR__ . '/vendor/autoload.php';
 
 // --- BAGIAN YANG DIPERBAIKI ---
 // Parsing URL yang lebih simpel dan andal
