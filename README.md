@@ -128,6 +128,52 @@ Semua endpoint di bawah ini **memerlukan token Admin**.
 
 ---
 
+## 💸 Endpoint Transaksi (`/transactions`)
+
+Endpoint ini digunakan untuk mengelola data transaksi.
+
+### 1. Input Transaksi Baru (Admin & Karyawan)
+
+- **URL:** `/transactions`
+- **Method:** `POST`
+- **Otorisasi:** Token (Admin & Karyawan)
+- **Body:**
+  ```json
+  {
+    "tgl_transaksi": "2025-08-10",
+    "nilai_transaksi": 75000,
+    "ket_transaksi": "Makan siang tim",
+    "status": "pg"
+  }
+  ```
+- **Catatan:**
+  Value `status` diisi dengan `pm` (pemasukan) atau `pg` (pengeluaran).
+
+### 2. Melihat Semua Transaksi (Admin Only)
+
+- **URL:** `/transactions`
+- **Method:** `GET`
+- **Otorisasi:** Token Admin
+
+### 3. Monitoring (Dashboard) (Admin Only)
+
+- **URL:** `/transactions/dashboard`
+- **Method:** `GET`
+- **Otorisasi:** Token Admin
+
+### 4. Cetak Laporan (Admin Only)
+
+- **URL:** `/transactions/report`
+- **Method:** `GET`
+- **Otorisasi:** Token Admin
+- **Parameter (Opsional):**
+  - `?start=YYYY-MM-DD`
+  - `?end=YYYY-MM-DD`
+- **Contoh:**
+  `/transactions/report?start=2025-07-01&end=2025-07-31`
+
+---
+
 ## 📌 Catatan
 
 - Gantilah `{id_user}` di URL dengan _id_ user terkait.
