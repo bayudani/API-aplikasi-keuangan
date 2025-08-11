@@ -7,7 +7,9 @@ $db = getDbConnection();
 $user_model = new User_model($db);
 
 $method = $_SERVER['REQUEST_METHOD'];
-$params = $params ?? []; // Pastikan $params ada
+// Ambil parameter dari path URL (seperti /update/2)
+$pathInfo = $_SERVER['PATH_INFO'] ?? '';
+$params = $pathInfo ? explode('/', trim($pathInfo, '/')) : [];
 
 // Logika routing
 if ($method == 'POST' && empty($params)) {

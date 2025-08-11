@@ -1,186 +1,224 @@
-# 📒 Dokumentasi API Aplikasi Keuangan
 
-Selamat datang di dokumentasi resmi API Aplikasi Keuangan!
-API ini dibuat menggunakan PHP Native dengan struktur sederhana dan aman menggunakan **JWT** untuk otorisasi.
+# Dokumentasi API Manajemen Keuangan
+
+API ini digunakan untuk autentikasi, manajemen user, dan pengelolaan transaksi pemasukan serta pengeluaran keuangan.
 
 ---
 
-## 🌐 Base URL
+## 🔑 Autentikasi
 
+### Login User
+
+- **Endpoint:** `POST /api/Auth.php`
+- **Hak Akses:** Publik
+
+#### Request Body (JSON)
+
+```json
+{
+    "username": "admin",
+    "password": "adminpassword"
+}
 ```
-http://backendaplikasikeuangan.test
+
+#### Success Response (200 OK)
+
+```json
+{
+    "status": "success",
+    "message": "Login berhasil.",
+    "token": "eyJhbGciOiJI...",
+    "user": {
+        "id_user": "1",
+        "nama_user": "Admin",
+        "level": "Admin"
+    }
+}
 ```
 
 ---
 
-## 🔑 Otentikasi & Otorisasi
+## 👤 Manajemen User (`users.php`)
 
-API ini menggunakan **JSON Web Token (JWT)** untuk mengamankan endpoint.
-
-1. **Dapatkan token** dengan melakukan **POST** ke endpoint `/auth/login`.
-2. Untuk setiap _request_ ke endpoint yang memerlukan otorisasi, **sertakan token** di dalam header:
-   - **Key:** `Authorization`
-   - **Value:** `Bearer {token_yang_didapat_saat_login}`
-
----
-
-## 👤 Endpoint User
-
-Endpoint ini digunakan untuk semua operasi yang berkaitan dengan data user, seperti registrasi dan manajemen user oleh Admin.
+Endpoint untuk mengelola data user.
 
 ### 1. Registrasi User Baru
 
-- **URL:** `/users`
-- **Method:** `POST`
-- **Otorisasi:** Publik _(tidak memerlukan token)_
-- **Body:**
-  ```json
-  {
-    "nama_user": "Nama Lengkap User",
+- **Endpoint:** `POST /api/users.php`
+- **Hak Akses:** Publik
+
+#### Request Body (JSON)
+
+```json
+{
+    "nama_user": "Budi Karyawan",
     "level": "Karyawan",
-    "username": "usernamebaru",
-    "password": "passwordrahasia"
-  }
-  ```
-- **Catatan:**
-  Value `level` harus diisi dengan `Admin` atau `Karyawan`.
+    "username": "budi",
+    "password": "password123"
+}
+```
 
----
+#### Success Response (201 Created)
 
-## 🔐 Endpoint Auth
-
-Khusus untuk proses login.
-
-### 1. Login User
-
-- **URL:** `/auth`
-- **Method:** `POST`
-- **Otorisasi:** Publik
-- **Body:**
-  ```json
-  {
-    "username": "usernameyangterdaftar",
-    "password": "passwordnya"
-  }
-  ```
-- **Respon Sukses:**
-  ```json
-  {
+```json
+{
     "status": "success",
-    "message": "Login berhasil.",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "user": {
-      "id_user": 1,
-      "nama_user": "Nama User",
-      "level": "Admin",
-      "username": "admin"
-    }
-  }
-  ```
+    "message": "Registrasi berhasil. Silakan login."
+}
+```
 
----
+### 2. Melihat Semua User
 
-## 💼 Endpoint Manajemen User (Admin Only)
+- **Endpoint:** `GET /api/users.php`
+- **Hak Akses:** Admin
 
-Semua endpoint di bawah ini **memerlukan token Admin**.
+#### Request Body
 
-### 1. Melihat Semua User
+Tidak ada.
 
-- **URL:** `/users`
-- **Method:** `GET`
-- **Otorisasi:** Token Admin
+### 3. Update Info User
 
-### 2. Mengubah Data User
+- **Endpoint:** `POST /api/users.php/update/{id}`
+- **Contoh URL:** `/api/users.php/update/2`
+- **Hak Akses:** Admin
 
-- **URL:** `/users/update/{id_user}`
-- **Method:** `POST`
-- **Otorisasi:** Token Admin
-- **Body:**
-  ```json
-  {
-    "nama_user": "Nama Baru",
+#### Request Body (JSON)
+
+```json
+{
+    "nama_user": "Budi Hartono",
     "level": "Karyawan",
-    "username": "usernamebaru"
-  }
-  ```
+    "username": "budihartono"
+}
+```
 
-### 3. Menghapus User
+### 4. Update Password
 
-- **URL:** `/users/delete/{id_user}`
-- **Method:** `POST`
-- **Otorisasi:** Token Admin
+- **Endpoint:** `POST /api/users.php/update_password/{id}`
+- **Contoh URL:** `/api/users.php/update_password/2`
+- **Hak Akses:** Pemilik Akun atau Admin
+
+#### Request Body (JSON)
+
+```json
+{
+    "new_password": "passwordBaruYangAman"
+}
+```
+
+### 5. Hapus User
+
+- **Endpoint:** `POST /api/users.php/delete/{id}`
+- **Contoh URL:** `/api/users.php/delete/3`
+- **Hak Akses:** Admin
+
+#### Request Body
+
+Tidak ada.
 
 ---
 
-## 🔄 Endpoint Umum User (Butuh Login)
+## 💰 Manajemen Transaksi (`transactions.php`)
 
-### 1. Mengubah Password
+Endpoint terkait pemasukan dan pengeluaran keuangan.
 
-- **URL:** `/users/update_password/{id_user}`
-- **Method:** `POST`
-- **Otorisasi:** Token_(Admin bisa mengubah password siapa saja, Karyawan hanya bisa mengubah password sendiri)_
-- **Body:**
-  ```json
-  {
-    "new_password": "passwordbaru"
-  }
-  ```
+### 1. Membuat Transaksi Baru
 
----
+- **Endpoint:** `POST /api/transactions.php`
+- **Hak Akses:** Admin & Karyawan
 
-## 💸 Endpoint Transaksi (`/transactions`)
+#### Request Body (JSON)
 
-Endpoint ini digunakan untuk mengelola data transaksi.
-
-### 1. Input Transaksi Baru (Admin & Karyawan)
-
-- **URL:** `/transactions`
-- **Method:** `POST`
-- **Otorisasi:** Token (Admin & Karyawan)
-- **Body:**
-  ```json
-  {
-    "tgl_transaksi": "2025-08-10",
-    "nilai_transaksi": 75000,
-    "ket_transaksi": "Makan siang tim",
+```json
+{
+    "tgl_transaksi": "2025-08-11",
+    "nilai_transaksi": 50000,
+    "ket_transaksi": "Beli ATK Kantor",
     "status": "pg"
-  }
-  ```
-- **Catatan:**
-  Value `status` diisi dengan `pm` (pemasukan) atau `pg` (pengeluaran).
+}
+```
 
-### 2. Melihat Semua Transaksi (Admin Only)
-
-- **URL:** `/transactions`
-- **Method:** `GET`
-- **Otorisasi:** Token Admin
-
-### 3. Monitoring (Dashboard) (Admin Only)
-
-- **URL:** `/transactions/dashboard`
-- **Method:** `GET`
-- **Otorisasi:** Token Admin
-
-### 4. Cetak Laporan (Admin Only)
-
-- **URL:** `/transactions/report`
-- **Method:** `GET`
-- **Otorisasi:** Token Admin
-- **Parameter (Opsional):**
-  - `?start=YYYY-MM-DD`
-  - `?end=YYYY-MM-DD`
-- **Contoh:**
-  `/transactions/report?start=2025-07-01&end=2025-07-31`
+**Catatan:**
+`status` bisa diisi `'pg'` (pengeluaran) atau `'pm'` (pemasukan).
 
 ---
 
-## 📌 Catatan
+### 2. Melihat Transaksi
 
-- Gantilah `{id_user}` di URL dengan _id_ user terkait.
-- Gunakan header Authorization di setiap endpoint yang membutuhkan otorisasi:
-  ```
-  Authorization: Bearer {token}
-  ```
-- Admin dapat melakukan seluruh operasi manajemen user, Karyawan hanya dapat mengubah password sendiri.
+- **Endpoint:** `GET /api/transactions.php`
+- **Hak Akses:**
+  - Admin (melihat semua transaksi)
+  - Karyawan (melihat miliknya sendiri)
+- **Request Body:** Tidak ada
 
 ---
+
+### 3. Update Transaksi
+
+- **Endpoint:** `PUT /api/transactions.php/{id}`
+- **Contoh URL:** `/api/transactions.php/5`
+- **Hak Akses:** Admin
+
+#### Request Body (JSON)
+
+**Kirim hanya field yang ingin diubah**
+
+```json
+{
+    "nilai_transaksi": 55000,
+    "ket_transaksi": "Beli ATK Kantor dan Kopi"
+}
+```
+
+---
+
+### 4. Hapus Transaksi
+
+- **Endpoint:** `DELETE /api/transactions.php/{id}`
+- **Contoh URL:** `/api/transactions.php/5`
+- **Hak Akses:** Admin
+- **Request Body:** Tidak ada
+
+---
+
+### 5. Data Dashboard
+
+- **Endpoint:** `GET /api/transactions.php/dashboard`
+- **Hak Akses:** Admin
+- **Request Body:** Tidak ada
+
+#### Success Response (200 OK)
+
+```json
+{
+    "status": "success",
+    "data": {
+        "pemasukan_bulan_ini": 5000000.0,
+        "pengeluaran_bulan_ini": 1500000.0,
+        "saldo_bulan_ini": 3500000.0
+    }
+}
+```
+
+---
+
+### 6. Laporan Transaksi (Filter Tanggal)
+
+- **Endpoint:** `GET /api/transactions.php/report`
+- **Hak Akses:** Admin
+
+#### Query Params (Opsional)
+
+- `start`: Tanggal mulai (format: `YYYY-MM-DD`). Default: awal bulan ini.
+- `end`: Tanggal akhir (format: `YYYY-MM-DD`). Default: akhir bulan ini.
+
+**Contoh URL:**
+`/api/transactions.php/report?start=2025-07-01&end=2025-07-31`
+
+---
+
+## Catatan Umum
+
+- Semua endpoint menerima dan mengembalikan data dalam format JSON.
+- Pastikan untuk menyertakan Bearer Token pada header Authorization untuk endpoint yang membutuhkan autentikasi.
+- Hak akses harus diperhatikan dan disesuaikan dengan role user.

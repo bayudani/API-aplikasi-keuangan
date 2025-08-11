@@ -23,7 +23,7 @@ $uri = $path ? explode('/', $path) : [];
 
 // Hapus nama folder proyek dari URI jika ada
 // Sesuaikan 'projek_api_flutter' dengan nama folder proyek lo
-$projectName = 'projek_api_flutter'; 
+$projectName = 'BackendApliksiKeuangan'; 
 $projectIndex = array_search($projectName, $uri);
 if ($projectIndex !== false) {
     $uri = array_slice($uri, $projectIndex + 1);
