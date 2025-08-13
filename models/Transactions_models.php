@@ -14,7 +14,7 @@ class Transactions_models {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // BARU: Fungsi untuk mengambil transaksi berdasarkan ID user (untuk Karyawan)
+    //Fungsi untuk mengambil transaksi berdasarkan ID user (untuk Karyawan)
     public function getTransactionsByUserId($id_user) {
         $query = "SELECT t.*, u.nama_user FROM " . $this->table_name . " t JOIN Tbl_User u ON t.id_user = u.id_user WHERE t.id_user = :id_user ORDER BY t.tgl_transaksi DESC, t.no_transaksi DESC";
         $stmt = $this->conn->prepare($query);

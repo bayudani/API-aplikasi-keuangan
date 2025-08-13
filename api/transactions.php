@@ -1,5 +1,4 @@
 <?php
-// transactions.php - VERSI LENGKAP DENGAN CRUD & HAK AKSES
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/jwt_helper.php';
@@ -8,7 +7,7 @@ require_once __DIR__ . '/../models/Transactions_models.php';
 // Atur header
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Tambahkan PUT & DELETE
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // akses metode yang diizinkan
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
